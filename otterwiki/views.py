@@ -88,6 +88,7 @@ def healthz():
 # wiki views
 #
 @app.route("/-/about")
+@login_required
 def about():
     with open(os.path.join(app.root_path, "about.md")) as f:
         content = f.read()
@@ -101,6 +102,7 @@ def about():
 
 
 @app.route("/-/syntax")
+@login_required
 def syntax():
     return render_template(
         "syntax.html",
@@ -110,6 +112,7 @@ def syntax():
 
 @app.route("/-/help")
 @app.route("/-/help/<string:topic>")
+@login_required
 def help(topic=None):
     toc = None
     content = "TODO"
@@ -253,18 +256,21 @@ def user(uid=None):
 @app.route("/-/log/<string:revision>")
 @app.route("/-/changelog")
 @app.route("/-/changelog/<string:revision>")
+@login_required
 def changelog(revision=None):
     chlg = Changelog(revision)
     return chlg.render()
 
 
 @app.route("/-/changelog/feed.rss")
+@login_required
 def changelog_feed_rss():
     chlg = Changelog()
     return chlg.feed_rss()
 
 
 @app.route("/-/changelog/feed.atom")
+@login_required
 def changelog_feed_atom():
     chlg = Changelog()
     return chlg.feed_atom()
@@ -380,6 +386,7 @@ def view(path="Home"):
 
 
 @app.route("/<path:path>/history", methods=["POST", "GET"])
+@login_required
 def history(path):
     # return "path={}".format(path)
     p = Page(path)
@@ -392,6 +399,7 @@ def history(path):
 @app.route(
     "/<path:path>/diff/<string:rev_a>/<string:rev_b>", methods=["POST", "GET"]
 )
+@login_required
 def diff(path, rev_a, rev_b):
     # return "path={}".format(path)
     p = Page(path)
@@ -430,6 +438,7 @@ def delete(path):
 @app.route("/<path:path>/blame/", methods=["GET"])
 @app.route("/<path:path>/blame", methods=["GET"])
 @app.route("/<path:path>/blame/<string:revision>", methods=["GET"])
+@login_required
 def blame(path, revision=None):
     p = Page(path, revision=revision)
     return p.blame()
@@ -487,6 +496,7 @@ def draft(path):
 
 @app.route("/<path:pagepath>/source/<string:revision>")
 @app.route("/<path:pagepath>/source", methods=["GET"])
+@login_required
 def source(pagepath, revision=None):
     raw = 'raw' in request.args
     p = Page(pagepath, revision=revision)

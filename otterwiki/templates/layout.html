@@ -129,6 +129,7 @@
                   <div class="dropdown-menu dropdown-menu-right w-200" aria-labelledby="navbar-dropdown-toggle-btn-1"> <!-- w-200 = width: 20rem (200px) -->
 
 {% block navbardropdown %}
+{% if current_user.is_authenticated %}
 {% if config.HIDE_LOGO %}
                     <a href="{{ url_for("about") }}" class="dropdown-item-with-icon">
                         <span class="dropdown-icon">
@@ -136,7 +137,8 @@
                         </span>
                         About An Otter Wiki
                     </a>
-{% endif %}
+{% endif %} {# if current_user #}
+{% endif %} {# if config.HIDE_LOGO #}
 {% if has_permission('READ') %}
                     <div class="dropdown-divider mt-5 mb-5"></div>
 {% endif %}
