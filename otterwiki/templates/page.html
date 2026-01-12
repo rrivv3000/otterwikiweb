@@ -18,6 +18,7 @@
 {#
 #}
 {% block navbardropdown %}
+{% if current_user.is_authenticated %}
                     <a href="{{ url_for('attachments', pagepath=pagepath) }}" class="dropdown-item-with-icon">
                         <span class="dropdown-icon">
                             <i class="fa fa-paperclip"></i>
@@ -43,9 +44,12 @@
                         </span>
                         View Source
                     </a>
-{% endif %}
+{% endif %} {# if has_permission #}
+{% endif %} {# if current_user #}
 {% include 'snippets/navbardropdown_rename_remove.html' %}
+{% if current_user.is_authenticated %}
                     <div class="dropdown-divider mt-5 mb-5"></div>
+{% endif %}
 {{ super() }}
 {% endblock %}
 {#

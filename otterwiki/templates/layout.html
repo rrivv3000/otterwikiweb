@@ -137,11 +137,13 @@
                         </span>
                         About An Otter Wiki
                     </a>
-{% endif %} {# if current_user #}
 {% endif %} {# if config.HIDE_LOGO #}
+{% endif %} {# if current_user #}
+{% if current_user.is_authenticated %}
 {% if has_permission('READ') %}
                     <div class="dropdown-divider mt-5 mb-5"></div>
-{% endif %}
+{% endif %} {# if has_permission #}
+{% endif %}{# if current_user #}
                     <a href="#" class="dropdown-item-with-icon" onclick="halfmoon.toggleDarkMode()">
                         <span class="dropdown-icon">
                             <i class="far fa-moon"></i>
