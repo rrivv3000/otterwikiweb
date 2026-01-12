@@ -43,6 +43,8 @@
   <!-- Favicon and title -->
 {%- if config.SITE_ICON %}
     <link rel="icon" href="{{ config.SITE_ICON }}">
+{%- elif config.CUSTOM_FAVICON %}
+    <link rel="icon" href="{{ url_for("static", filename="img/custom/favicon.ico") }}">
 {%- else %}
     <link rel="icon" href="{{ url_for("static", filename="img/otter-favicon2.png") }}">
 {%- endif %}
@@ -106,6 +108,8 @@
             <a href="{{ url_for("index") }}" class="navbar-brand ml-10 ml-sm-20" title="{%if description%}{{description}}{%elif config.SITE_DESCRIPTION %}{{config.SITE_DESCRIPTION}}{%else%}A minimalistic wiki powered by python, markdown and git.{%endif%}">
 {%- if config.SITE_LOGO %}
                 <img src="{{ config.SITE_LOGO }}" alt="" id="site_logo"/>
+{%- elif config.CUSTOM_SITE_LOGO %}
+                <img src="{{ url_for("static", filename="img/custom/logo.png") }}" alt="" id="site_logo"/>
 {%- else %}
                 <img src="{{ url_for("static", filename="img/otterhead.png") }}" alt="" id="site_logo"/>
 {%- endif %}

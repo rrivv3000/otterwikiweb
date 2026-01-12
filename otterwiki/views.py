@@ -67,11 +67,18 @@ def sitemap():
 
 @app.route("/favicon.ico")
 def favicon():
-    return send_from_directory(
-        os.path.join(app.root_path, "static/img"),
-        "otter-favicon2.ico",
-        mimetype="image/vnd.microsoft.icon",
-    )
+    if app.config["CUSTOM_FAVICON"] == True:
+        return send_from_directory(
+            os.path.join(app.root_path, "static/img/custom"),
+            "favicon.ico",
+            mimetype="image/vnd.microsoft.icon",
+        )    
+    else:
+        return send_from_directory(
+            os.path.join(app.root_path, "static/img"),
+            "otter-favicon2.ico",
+            mimetype="image/vnd.microsoft.icon",
+        )
 
 
 @app.route("/-/healthz")
