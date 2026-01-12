@@ -93,8 +93,10 @@ for key in app.config:
 # check if custom logo and favicon exist in /static/img/custom/ and apply them
 if os.path.exists(os.path.join(app.root_path, "static/img/custom/logo.png")):
     app.config["CUSTOM_SITE_LOGO"] = True
+    print("Custom logo exists.")
 if os.path.exists(os.path.join(app.root_path, "static/img/custom/favicon.ico")):
     app.config["CUSTOM_FAVICON"] = True
+    print("Custom favicon exists.")
 
 # configure logging
 app.logger.setLevel(app.config["LOG_LEVEL"])
