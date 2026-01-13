@@ -1,5 +1,5 @@
 
-# Quick and dirty hack of An Otter Wiki to work better as a website
+# Quick and dirty hack of An Otter Wiki to be more suitable as a personal website
 
 References and links to wiki functionality and info are removed from users who are not registered. 
 
@@ -7,9 +7,9 @@ Views with wiki functionality have been restricted to only be visible to logged 
 
 Put a custom logo and favicon in the folder otterwiki/static/img/custom/, named logo.png and favicon.ico. They need to both be square. They will be used instead of the otterwiki default ones if they exist. The reason for serving the logos through the static folder rather as attachments is for the possibility to configure client caching.
 
-![](screenshot.png)
-
 ## An Otter Wiki
+
+![](screenshot.png)
 
 An Otter Wiki is Python-based software for collaborative content
 management, called a [wiki](https://en.wikipedia.org/wiki/Wiki). The
