@@ -11,6 +11,7 @@ import git
 import git.exc
 
 from otterwiki.util import split_path, ttl_lru_cache
+from otterwiki.repomgmt import get_repo_manager
 
 
 class StorageError(Exception):
@@ -306,6 +307,12 @@ class GitStorage(object):
         index.add([filename])
         actor = git.Actor(author[0], author[1])
         index.commit(message, author=actor)
+
+        # auto-push after storing file
+        repo_manager = get_repo_manager()
+        if repo_manager:
+            repo_manager.auto_push_if_enabled()
+
         return True
 
     def commit(self, filenames, message="", author=("", ""), no_add=False):
@@ -321,6 +328,11 @@ class GitStorage(object):
         actor = git.Actor(author[0], author[1])
         index.commit(message, author=actor)
 
+        # auto-push after commit
+        repo_manager = get_repo_manager()
+        if repo_manager:
+            repo_manager.auto_push_if_enabled()
+
     def revert(self, revision, message="", author=("", "")):
         actor = git.Actor(author[0], author[1])
         try:
@@ -334,6 +346,11 @@ class GitStorage(object):
 
         actor = git.Actor(author[0], author[1])
         self.repo.index.commit(message, author=actor)
+
+        # auto-push after revert
+        repo_manager = get_repo_manager()
+        if repo_manager:
+            repo_manager.auto_push_if_enabled()
 
     def diff(self, rev_a, rev_b):
         # https://docs.python.org/2/library/difflib.html
@@ -366,6 +383,11 @@ class GitStorage(object):
         if message is None:
             message = "Deleted {}.".format(filename_remove)
         self.repo.index.commit(message, author=actor)
+
+        # auto-push after delete
+        repo_manager = get_repo_manager()
+        if repo_manager:
+            repo_manager.auto_push_if_enabled()
 
     def rename(
         self,

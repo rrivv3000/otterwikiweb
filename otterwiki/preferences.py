@@ -191,7 +191,6 @@ def handle_content_and_editing(form):
         _update_preference(name.upper(), form.get(name, ""))
     for checkbox in [
         "retain_page_name_case",
-        "git_web_server",
         "treat_underscore_as_space_for_titles",
     ]:
         _update_preference(checkbox.upper(), form.get(checkbox, "False"))
@@ -200,6 +199,177 @@ def handle_content_and_editing(form):
     update_app_config()
     toast("Content and Editing Preferences updated.")
     return redirect(url_for("admin_content_and_editing"))
+
+
+def handle_repository_management(form):
+    # handle repo actions first
+    git_action_result = None
+
+    if form.get("git_push"):
+        git_action_result = _handle_git_push()
+    elif form.get("git_force_push"):
+        git_action_result = _handle_git_force_push()
+    elif form.get("git_pull"):
+        git_action_result = _handle_git_pull()
+
+    # If it was a git action, return to form with results
+    if git_action_result:
+        return repository_management_form(git_action_result)
+
+    # Otherwise handle preference updates
+    _update_preference("GIT_WEB_SERVER", form.get("git_web_server", "False"))
+
+    git_remote_push_enabled = form.get("git_remote_push_enabled") == "True"
+
+    if git_remote_push_enabled:
+        remote_url = form.get("git_remote_push_url", "").strip()
+
+        if not remote_url:
+            # remote url is missing - disable the feature and show error
+            _update_preference("GIT_REMOTE_PUSH_ENABLED", "False")
+            _update_preference("GIT_REMOTE_PUSH_PRIVATE_KEY", "")
+            _update_preference("GIT_REMOTE_PUSH_URL", "")
+            toast(
+                "SSH Remote URL is required when enabling automatic pushing.",
+                "error",
+            )
+        else:
+            _update_preference("GIT_REMOTE_PUSH_ENABLED", "True")
+            _update_preference("GIT_REMOTE_PUSH_URL", remote_url)
+
+            private_key = form.get("git_remote_push_private_key", "").strip()
+            if private_key != "**********":
+                # only update if it's not the placeholder (user wants to change it)
+                _update_preference("GIT_REMOTE_PUSH_PRIVATE_KEY", private_key)
+    else:
+        # clear the feature and associated settings
+        _update_preference("GIT_REMOTE_PUSH_ENABLED", "False")
+        _update_preference("GIT_REMOTE_PUSH_PRIVATE_KEY", "")
+        _update_preference("GIT_REMOTE_PUSH_URL", "")
+
+    git_remote_pull_enabled = form.get("git_remote_pull_enabled") == "True"
+
+    if git_remote_pull_enabled:
+        pull_remote_url = form.get("git_remote_pull_url", "").strip()
+
+        if not pull_remote_url:
+            # remote url is missing - disable the feature and show error
+            _update_preference("GIT_REMOTE_PULL_ENABLED", "False")
+            _update_preference("GIT_REMOTE_PULL_PRIVATE_KEY", "")
+            _update_preference("GIT_REMOTE_PULL_URL", "")
+            toast(
+                "SSH Remote URL is required when enabling automatic pulling.",
+                "error",
+            )
+        else:
+            _update_preference("GIT_REMOTE_PULL_ENABLED", "True")
+            _update_preference("GIT_REMOTE_PULL_URL", pull_remote_url)
+
+            pull_private_key = form.get(
+                "git_remote_pull_private_key", ""
+            ).strip()
+            if pull_private_key != "**********":
+                # only update if it's not the placeholder (user wants to change it)
+                _update_preference(
+                    "GIT_REMOTE_PULL_PRIVATE_KEY", pull_private_key
+                )
+    else:
+        # clear the feature and associated settings
+        _update_preference("GIT_REMOTE_PULL_ENABLED", "False")
+        _update_preference("GIT_REMOTE_PULL_PRIVATE_KEY", "")
+        _update_preference("GIT_REMOTE_PULL_URL", "")
+
+    # commit changes to the database
+    db.session.commit()
+    update_app_config()
+
+    toast("Repository Management Preferences updated.")
+    return redirect(url_for("admin_repository_management"))
+
+
+def _handle_git_push():
+    """Handle git push action."""
+    from otterwiki.repomgmt import get_repo_manager
+    from otterwiki.server import app
+
+    if not app.config.get('GIT_REMOTE_PUSH_ENABLED'):
+        return {
+            "action": "push",
+            "success": False,
+            "output": "Push functionality is not enabled",
+        }
+
+    remote_url = app.config.get('GIT_REMOTE_PUSH_URL')
+    private_key = app.config.get('GIT_REMOTE_PUSH_PRIVATE_KEY')
+
+    repo_manager = get_repo_manager()
+    if not repo_manager:
+        return {
+            "action": "push",
+            "success": False,
+            "output": "Repository manager not available",
+        }
+
+    success, output = repo_manager.push_to_remote(
+        remote_url, private_key, force=False
+    )
+    return {"action": "push", "success": success, "output": output}
+
+
+def _handle_git_force_push():
+    """Handle git force push action."""
+    from otterwiki.repomgmt import get_repo_manager
+    from otterwiki.server import app
+
+    if not app.config.get('GIT_REMOTE_PUSH_ENABLED'):
+        return {
+            "action": "force push",
+            "success": False,
+            "output": "Push functionality is not enabled",
+        }
+
+    remote_url = app.config.get('GIT_REMOTE_PUSH_URL')
+    private_key = app.config.get('GIT_REMOTE_PUSH_PRIVATE_KEY')
+
+    repo_manager = get_repo_manager()
+    if not repo_manager:
+        return {
+            "action": "force push",
+            "success": False,
+            "output": "Repository manager not available",
+        }
+
+    success, output = repo_manager.push_to_remote(
+        remote_url, private_key, force=True
+    )
+    return {"action": "force push", "success": success, "output": output}
+
+
+def _handle_git_pull():
+    """Handle git pull action."""
+    from otterwiki.repomgmt import get_repo_manager
+    from otterwiki.server import app
+
+    if not app.config.get('GIT_REMOTE_PULL_ENABLED'):
+        return {
+            "action": "pull",
+            "success": False,
+            "output": "Pull functionality is not enabled",
+        }
+
+    remote_url = app.config.get('GIT_REMOTE_PULL_URL')
+    private_key = app.config.get('GIT_REMOTE_PULL_PRIVATE_KEY')
+
+    repo_manager = get_repo_manager()
+    if not repo_manager:
+        return {
+            "action": "pull",
+            "success": False,
+            "output": "Repository manager not available",
+        }
+
+    success, output = repo_manager.pull_from_remote(remote_url, private_key)
+    return {"action": "pull", "success": success, "output": output}
 
 
 def handle_test_mail_preferences(form):
@@ -363,6 +533,16 @@ def content_and_editing_form():
     return render_template(
         "admin/content_and_editing.html",
         title="Content and Editing preferences",
+    )
+
+
+def repository_management_form(git_action_result=None):
+    if not has_permission("ADMIN"):
+        abort(403)
+    return render_template(
+        "admin/repository_management.html",
+        title="Repository Management",
+        git_action_result=git_action_result,
     )
 
 

@@ -172,6 +172,8 @@ def update_app_config():
                 "RETAIN_PAGE_NAME_CASE",
                 "SIDEBAR_MENUTREE_IGNORE_CASE",
                 "GIT_WEB_SERVER",
+                "GIT_REMOTE_PUSH_ENABLED",
+                "GIT_REMOTE_PULL_ENABLED",
                 "HIDE_LOGO",
                 "TREAT_UNDERSCORE_AS_SPACE_FOR_TITLES",
             ] or item.name.upper().startswith("SIDEBAR_SHORTCUT_"):
@@ -275,6 +277,17 @@ def format_datetime(value: datetime.datetime, format="medium") -> str:
     return value.strftime(format)
 
 
+@app.template_filter('slugify')
+def slugify(s, keep_slashes=True):
+    """
+    Example usage:
+
+    {{ pagepath | slugify(keep_slashes=True) }}.
+    """
+
+    return otterwiki.util.slugify(s, keep_slashes=keep_slashes)
+
+
 app.jinja_env.globals.update(os_getenv=os.getenv)
 
 from otterwiki.helper import load_custom_html
@@ -302,6 +315,11 @@ app.jinja_env.globals.update(
 import otterwiki.remote
 
 githttpserver = otterwiki.remote.GitHttpServer(path=app.config["REPOSITORY"])
+
+# initialize repository management stuff
+import otterwiki.repomgmt
+
+otterwiki.repomgmt.initialize_repo_management(storage)
 
 # contains application routes,
 # using side-effect of import executing the file to get
