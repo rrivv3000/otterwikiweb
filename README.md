@@ -1,6 +1,8 @@
 
 # Quick and dirty hack of An Otter Wiki to be more suitable as a personal website
 
+This fork is for a personal project and is not really suitable for use by anybody else (unless our needs magically happens to be identical). However, feel free of course.
+
 References and links to wiki functionality and info are removed from users who are not registered. 
 
 Views with wiki functionality have been restricted to only be visible to logged in users.

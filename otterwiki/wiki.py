@@ -473,7 +473,8 @@ class Page:
         if not has_permission("READ"):
             if current_user.is_authenticated and not current_user.is_approved:
                 toast(
-                    "You lack the permissions to access this wiki. Please wait for approval."
+                    "Du har ikke tilgang til denne nettisden. Vennligst vent på godkjenning."
+
                 )
             elif current_user.is_authenticated and current_user.is_approved:
                 toast(
@@ -481,7 +482,7 @@ class Page:
                 )
             else:
                 toast(
-                    "You lack the permissions to access this wiki. Please login."
+                    "Du har ikke tilgang til denne nettsiden. Vennligst logg inn."
                 )
             return redirect(url_for("login"))
         # handle case that page doesn't exists

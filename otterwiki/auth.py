@@ -102,7 +102,7 @@ class SimpleAuth:
         # render template
         return render_template(
             "login.html",
-            title="Login",
+            title="Logg inn",
             email=email,
             remember=remember,
             next=next,
@@ -176,7 +176,7 @@ class SimpleAuth:
             # redirect
             return redirect(next_page)
         else:
-            toast("Invalid email address or password.", "error")
+            toast("Ugyldig e-postadresse eller passord.", "error")
 
         return self.login_form(email, remember, next=next_page)
 
@@ -410,7 +410,7 @@ class SimpleAuth:
     def lost_password_form(self):
         return render_template(
             "lost_password.html",
-            title="Lost password",
+            title="Glemt passord",
         )
 
     def handle_recover_password(self, email):
@@ -440,7 +440,7 @@ class SimpleAuth:
             app.logger.info("auth: Password recovery for: {}".format(email))
             # notify user
             toast(
-                "A recovery link been sent to {}. Please check your mailbox.".format(
+                "En lenke for å sette nytt passord har blitt sendt til {}.".format(
                     email
                 )
             )
