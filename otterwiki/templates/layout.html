@@ -152,7 +152,7 @@
                         <span class="dropdown-icon">
                             <i class="far fa-moon"></i>
                         </span>
-                        Toggle dark mode
+                        Slå på/ av mørkmodus
                     </a>
 
 {% if not current_user.is_authenticated %}
@@ -160,7 +160,7 @@
                         <span class="dropdown-icon">
                             <i class="fas fa-sign-in-alt"></i>
                         </span>
-                        Login
+                        Logg inn
                     </a>
 {% else %}
                     <a href="{{ url_for("settings") }}" class="dropdown-item-with-icon">

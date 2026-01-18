@@ -10,7 +10,7 @@
                     <span class="sidebar-icon">
                         <i class="fas fa-home"></i>
                     </span>
-                    Home
+                    Forside
                 </a>
 {% endif %}
 {% if has_permission('READ') and "pageindex" in config.SIDEBAR_SHORTCUTS.lower().split() %}
@@ -18,7 +18,7 @@
                     <span class="sidebar-icon">
                         <i class="fas fa-list"></i>
                     </span>
-                    A - Z
+                    A - Å
                 </a>
 {% endif %}
 {% if current_user.is_authenticated %}

@@ -5,6 +5,8 @@ References and links to wiki functionality and info are removed from users who a
 
 Views with wiki functionality have been restricted to only be visible to logged in users.
 
+Outwards facing parts of the site has been translated to Norwegian. This is limited only to the parts of the site visible to a non-registered user without editing rights.
+
 Put a custom logo and favicon in the folder otterwiki/static/img/custom/, named logo.png and favicon.ico. They need to both be square. They will be used instead of the otterwiki default ones if they exist. The reason for serving the logos through the static folder rather as attachments is for the possibility to configure client caching.
 
 ## An Otter Wiki

@@ -380,14 +380,14 @@ def request_confirmation_link(email):
 #
 @app.route("/<path:path>/view/<string:revision>")
 @app.route("/<path:path>/view")
-def pageview(path="Home", revision=None):
+def pageview(path="Forside", revision=None):
     p = Page(path, revision=revision)
     return p.view()
 
 
 # last matching endpoint seems to be the default for url_for
 @app.route("/<path:path>")
-def view(path="Home"):
+def view(path="Forside"):
     p = AutoRoute(path, values=request.values)
     return p.view()
 
