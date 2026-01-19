@@ -1,4 +1,4 @@
-{% if not current_user.is_authenticated %}
+{% if current_user.is_authenticated %}
 <h5 class="sidebar-title">Documentation</h5>
 <div class="sidebar-divider"></div>
 <a href="{{ url_for("help") }}" class="sidebar-link sidebar-link-with-icon">
