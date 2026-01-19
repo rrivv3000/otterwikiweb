@@ -2,5 +2,5 @@
 {% extends "wiki.html" %}
 {% block content %}
 <h2>404 - Kunne ikke finne siden</h2>
-<p>Siden "{{pagename}}" finnes ikke. Ønsker du å <a href="{{ url_for("edit", path=pagepath) }}">opprette</a> den?</p>
+<p>Siden "{{pagename}}" finnes ikke.{% if current_user.is_authenticated %} Ønsker du å <a href="{{ url_for("edit", path=pagepath) }}">opprette</a> den?</p>{% endif %}
 {% endblock %}
