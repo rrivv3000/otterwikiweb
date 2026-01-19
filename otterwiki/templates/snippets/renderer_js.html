@@ -7,9 +7,9 @@
 <script src="{{ url_for("static", filename="js/mermaid@11.6.0.min.js") }}"></script>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function(event) {
-        let theme = 'neutral';
+        let theme = 'default'; // This is the theme on light mode, you can find themes here: https://mermaid.ai/open-source/config/theming.html
         if (document.querySelector("body").classList.contains("dark-mode")) {
-            theme = 'neutral';
+            theme = 'default'; // This is the theme on dark mode
         }
         mermaid.initialize({
             theme: theme,
