@@ -55,7 +55,7 @@
 {% elif key[0] == 1  %}
 (Sidenavn og {{key[1] - 1}} treff{%if key[1] -1 != 1%}{%endif%} funnet)</h2>
 {% else %}
-({{key[1]}} teff{%if key[1]!=1%}{%endif%} funnet)</h2>
+({{key[1]}} treff{%if key[1]!=1%}{%endif%} funnet)</h2>
 {% endif -%}
 {% for match in result[key] %}
 {%- if match -%}
