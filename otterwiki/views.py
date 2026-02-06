@@ -43,7 +43,16 @@ from flask_login import login_required
 #
 @app.route("/")
 def index():
-    return view()
+    home_page = app.config.get("HOME_PAGE", "")
+
+    if not home_page:
+        return view()
+
+    # special page (starts with /-/) - redirect
+    if home_page.startswith("/-/"):
+        return redirect(home_page)
+
+    return view(path=home_page)
 
 
 @app.route("/robots.txt")
@@ -116,6 +125,7 @@ def syntax():
     return render_template(
         "syntax.html",
         in_help=True,
+        pagepath="",
     )
 
 

@@ -96,6 +96,8 @@ class Changelog:
 
     def render(self):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         log = self.get()
         pages = []
@@ -219,6 +221,8 @@ class Changelog:
 
     def show_commit(self, revision):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         try:
             metadata, diff = storage.show_commit(revision)
@@ -433,6 +437,8 @@ class Page:
     def source(self, raw=False):
         # handle permissions
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         # handle case that the page doesn't exists
         self.exists_or_404()
@@ -546,8 +552,29 @@ class Page:
         )
 
         # generate canonical URL (without trailing slash)
-        # special case: if this is the Home page, canonical should point to root "/"
-        if self.pagepath == "Home":
+        # special case: if this is the configured home page, canonical should point to root "/"
+        home_page = app.config.get("HOME_PAGE", "")
+
+        is_home_page = False
+        if not home_page and self.pagepath.lower() == "home":
+            is_home_page = True
+        elif home_page and not home_page.startswith("/-/"):
+            # custom page - normalize both paths for comparison
+            custom_page_normalized = get_filename(
+                home_page.strip("/")
+            ).replace(".md", "")
+            current_page_normalized = self.filename.replace(".md", "")
+            if app.config.get("RETAIN_PAGE_NAME_CASE"):
+                is_home_page = (
+                    custom_page_normalized == current_page_normalized
+                )
+            else:
+                is_home_page = (
+                    custom_page_normalized.lower()
+                    == current_page_normalized.lower()
+                )
+
+        if is_home_page:
             canonical_url = url_for("index", _external=True)
         else:
             canonical_url = url_for("view", path=self.pagepath, _external=True)
@@ -723,6 +750,8 @@ class Page:
 
     def blame(self):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         # handle case that the page doesn't exists
         self.exists_or_404(in_git=True)
@@ -740,6 +769,7 @@ class Page:
         fdata = []
         # helper
         last = None
+        last_index = 0
         oddeven = "odd"
         # use highlighted lines
         for row in data:
@@ -751,7 +781,7 @@ class Page:
             if row[0] != last:
                 oddeven = "odd" if oddeven == "even" else "even"
                 fdata.append(
-                    (
+                    [
                         row[0],  # revision
                         row[1],  # author
                         row[2],  # datetime
@@ -759,11 +789,17 @@ class Page:
                         line,  # the actual line
                         f"chunk-start chunk-start-{oddeven}",  # alternating css class
                         row[0],  # revision used as border-color
-                    )
+                        row[5],  # commit message
+                        1,  # lines covered by the meta
+                    ]
                 )
                 last = row[0]
+                last_index = len(fdata) - 1
             else:
-                fdata.append(("", "", "", int(row[3]), line, oddeven, row[0]))
+                fdata.append(
+                    ("", "", "", int(row[3]), line, oddeven, row[0], "", 0)
+                )
+                fdata[last_index][8] += 1
         menutree = SidebarPageIndex(get_page_directoryname(self.pagepath))
         return render_template(
             "blame.html",
@@ -778,6 +814,8 @@ class Page:
 
     def diff(self, rev_a=None, rev_b=None):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         # handle case that the page doesn't exists
         self.exists_or_404()
@@ -807,6 +845,8 @@ class Page:
 
     def history(self, rev_a: str | None = None, rev_b: str | None = None):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
 
         self.exists_or_404(in_git=True)
@@ -990,6 +1030,8 @@ class Page:
 
     def render_attachments(self):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         # handle case that the page doesn't exists
         self.exists_or_404()
@@ -1073,6 +1115,8 @@ class Page:
         self, filename, author, new_filename=None, message=None, delete=None
     ):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         a = Attachment(self.pagepath, filename)
         if not a.exists():
@@ -1292,6 +1336,8 @@ class Attachment:
 
     def edit(self):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         if not self.exists():
             return abort(404)
@@ -1315,6 +1361,8 @@ class Attachment:
 
     def get(self):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         if self.revision is None:
             if not storage.exists(self.filepath):
@@ -1571,6 +1619,8 @@ class Search:
 
     def render(self):
         if not has_permission("READ"):
+            if not current_user.is_authenticated:
+                return redirect(url_for("login"))
             abort(403)
         self.compile()
         result = self.search()

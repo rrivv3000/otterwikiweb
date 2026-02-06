@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v2.17.1](https://github.com/redimp/otterwiki/releases/tag/v2.17.1) - 2026-02-02
+
+### Bug Fixes
+
+- fixed broken syntax page ([bc2da8b](https://github.com/redimp/otterwiki/commit/bc2da8bd03d4b03da04298f0982a201396f0ddbf) by @deseven)
+- redirect not logged in users to the login page where applicable ([8b9289d](https://github.com/redimp/otterwiki/commit/8b9289d8939b6f0ae206ec2e6ea76d58f9e23bf6) by @deseven)
+
+<small>[Compare with v2.17.0](https://github.com/redimp/otterwiki/compare/v2.17.0...v2.17.1)</small>
+
+## [v2.17.0](https://github.com/redimp/otterwiki/releases/tag/v2.17.0) - 2026-02-01
+
+<small>[Compare with v2.16.0](https://github.com/redimp/otterwiki/compare/v2.16.0...v2.17.0)</small>
+
+### Features
+
+- custom home page, see #354 ([16e1a94](https://github.com/redimp/otterwiki/commit/16e1a94212e1cf0981d20e898c242ce0e598afbc) by @deseven).
+- Editor: Add Wikilinks with Title, see #357 and #358 ([466c338](https://github.com/redimp/otterwiki/pull/358/changes/466c338fc2827a55253d7bd24c286cda917c4c45) by @ryanwhowe)
+- plugin hook for Wikilinks rendering and example plugin, see #363 ([6d20a5a](https://github.com/redimp/otterwiki/commit/6d20a5adede14ddfd9d445139b9e65d6e1fc3d5a) by @deseven).
+- added hotkey `]` to toggle the right extra sidebar, see #366 ([4ec484e](https://github.com/redimp/otterwiki/commit/4ec484e5542801676a782bdf9e3dcade622a0764)).
+- page blame: add the commit message for a better blame view, see #367 ([f51965e](https://github.com/redimp/otterwiki/commit/f51965e6d4ae8507bc1fcf9809a2c0ab8e3961a6)).
+
+### Bug Fixes
+
+- title-bar `SITE_NAME` title changed to `SITE_DESCRIPTION`, see #356 ([85a110d](https://github.com/redimp/otterwiki/commit/85a110dd0362fbf1b96aa466e2fc90679fd5dbe4)).
+- icon alignments in sidebar, see #362 ([db70758](https://github.com/redimp/otterwiki/pull/362/changes/db707580274bddbf224612bbee5a098f9831f810) by @tvanas)
+- lowercase GitHub-style alerts, see #360 ([1c6876d](https://github.com/redimp/otterwiki/pull/360/changes/1c6876dafb7718180d5ef3cf33da76ccfd7fcda2) by @aimileus)
+
 ## [v2.16.0](https://github.com/redimp/otterwiki/releases/tag/v2.16.0) - 2026-01-18
 
 <small>[Compare with v2.15.2](https://github.com/redimp/otterwiki/compare/v2.15.2...v2.16.0)</small>
@@ -18,8 +45,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - repository management manual actions ([6c89261](https://github.com/redimp/otterwiki/commit/6c892612ac8442bf4231ec213afcacd26fc9563a) by @deseven).
 - More options to customize the wiki using custom css
   - added classes with levels to the pageindex items ([91d797e](https://github.com/redimp/otterwiki/commit/91d797eebc5f25621f138f323608eddd8d82fb5b)).
-  - support custom fancy block styles, see #345 and #343 ([fde2bf6](https://github.com/redimp/otterwiki/pull/345/commits/fde2bf68bf05011d35a9fa4e4967db79ca636f30) by @freddyheppel).
-  - make pages customizable via css based on their pathname ([PR#349](https://github.com/redimp/otterwiki/pull/349) by @freddyheppel).
+  - support custom fancy block styles, see #345 and #343 ([fde2bf6](https://github.com/redimp/otterwiki/pull/345/commits/fde2bf68bf05011d35a9fa4e4967db79ca636f30) by @freddyheppell).
+  - make pages customizable via css based on their pathname ([PR#349](https://github.com/redimp/otterwiki/pull/349) by @freddyheppell).
 - Improving the plugin environment
   - added more plugin hooks for html injection & processing ([7f0fcbc](https://github.com/redimp/otterwiki/pull/336/commits/7f0fcbc7feb2260f4800df382309804d1f5120ff) by @deseven).
 

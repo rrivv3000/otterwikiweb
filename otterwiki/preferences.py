@@ -176,6 +176,17 @@ def handle_app_preferences(form):
         "hide_logo",
     ]:
         _update_preference(checkbox.upper(), form.get(checkbox, "False"))
+
+    home_page = form.get("home_page", "").strip()
+    if home_page and home_page.endswith(".md"):
+        toast(
+            "Custom home page path should not include the .md extension.",
+            "error",
+        )
+        return redirect(url_for("admin"))
+
+    _update_preference("HOME_PAGE", home_page)
+
     # commit changes to the database
     db.session.commit()
     update_app_config()

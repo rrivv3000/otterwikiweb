@@ -8,6 +8,7 @@ from mistune.inline_parser import LINK_LABEL
 from mistune.util import unikey, ESCAPE_TEXT
 import urllib.parse
 from otterwiki.util import slugify
+from otterwiki.plugins import chain_hooks
 
 __all__ = ['plugin_task_lists', 'plugin_footnotes']
 
@@ -524,7 +525,8 @@ class mistunePluginAlerts:
     }
     TYPES_WITH_PIPES = "|".join(TYPE_ICONS.keys())
     ALERT_LEADING = re.compile(
-        r'^ *\>(\s*\[!(' + TYPES_WITH_PIPES + r')\])?', flags=re.MULTILINE
+        r'^ *\>(\s*\[!(' + TYPES_WITH_PIPES + r')\])?',
+        flags=re.MULTILINE + re.I,
     )
     ALERT_BLOCK = re.compile(
         r'(?: {0,3}>\s*\[!('
@@ -587,6 +589,9 @@ class mistunePluginWikiLink:
     )
     WIKI_LINK_MOD_RE = re.compile(WIKI_LINK_MOD)
 
+    def __init__(self):
+        self.env = {}
+
     def parse_wikilink(self, inline, m, state):
         if m.group(4) and len(m.group(4)):
             left, right = m.group(2), m.group(4)
@@ -612,10 +617,21 @@ class mistunePluginWikiLink:
 
         # quote link (and just in case someone encoded already: unquote)
         link = urllib.parse.quote(urllib.parse.unquote(link), safe="/#")
+        # store env for later use in render
+        self.env = inline.env
         return "wikilink", inline.render(title, state), link
 
     def render_html_wikilink(self, text, link):
-        return '<a href="' + link + '">' + text + '</a>'
+        wikilink_html = '<a href="' + link + '">' + text + '</a>'
+
+        processed_html = chain_hooks(
+            "renderer_process_wikilink",
+            wikilink_html,
+            link,
+            text,
+            self.env.get('page'),
+        )
+        return processed_html
 
     def before_parse(self, md, s, state):
         def replace(match):
